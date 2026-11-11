@@ -1,0 +1,9 @@
+package io.correcta.cohort.security.models
+
+data class ProfilePrincipal(
+  val profileId: String,
+  val personId: String?,
+  val profileType: String?,
+  val login: String?,
+  val email: String?,
+)
