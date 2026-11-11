@@ -3,12 +3,14 @@ package io.correcta.cohort.service
 import io.correcta.cohort.entities.Cohort
 import io.correcta.cohort.entities.CohortMembership
 import io.correcta.cohort.entities.CohortRole
+import io.correcta.cohort.entities.MembershipInvitationState
 import io.correcta.cohort.exceptions.ConflictException
 import io.correcta.cohort.exceptions.NotFoundException
 import io.correcta.cohort.models.request.PaginationRequest
 import io.correcta.cohort.models.response.GetCohortMemberResponse
 import io.correcta.cohort.models.response.GetInternalCohortMembershipResponse
 import io.correcta.cohort.models.response.PagedResponse
+import io.correcta.cohort.repositories.CohortMembershipInvitationRepository
 import io.correcta.cohort.repositories.CohortMembershipRepository
 import io.correcta.cohort.repositories.CohortRepository
 import io.correcta.cohort.utils.PaginationExt.toPageRequest
@@ -22,6 +24,7 @@ import java.time.Instant
 class CohortMembershipService(
   val cohortRepository: CohortRepository,
   val cohortMembershipRepository: CohortMembershipRepository,
+  val cohortMembershipInvitationRepository: CohortMembershipInvitationRepository,
   val cohortAccessService: CohortAccessService,
   val identityProfileService: IdentityProfileService,
 ) {
@@ -68,7 +71,16 @@ class CohortMembershipService(
       throw ConflictException("O responsável pela turma não pode ser removido.")
     }
 
-    membership.leftAt = Instant.now()
+    val now = Instant.now()
+
+    membership.leftAt = now
+
+    cohortMembershipInvitationRepository
+      .findByCohortIdAndProfileIdAndState(cohortId, profileId, MembershipInvitationState.PENDING)
+      .forEach {
+        it.state = MembershipInvitationState.REVOKED
+        it.revokedAt = now
+      }
   }
 
   fun addMember(cohort: Cohort, profileId: String, role: CohortRole): CohortMembership {

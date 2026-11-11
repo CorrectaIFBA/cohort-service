@@ -11,6 +11,7 @@ import io.correcta.cohort.models.request.CreateInvitationCodeRequest
 import io.correcta.cohort.models.response.GetCohortMembershipResponse
 import io.correcta.cohort.models.response.GetInvitationCodeResponse
 import io.correcta.cohort.repositories.CohortInvitationCodeRepository
+import io.correcta.cohort.repositories.CohortMembershipRepository
 import io.correcta.cohort.repositories.CohortRepository
 import io.correcta.cohort.security.components.ScopeEvaluatorComponent
 import io.correcta.cohort.utils.ExpirationExt.withinLifetime
@@ -24,6 +25,7 @@ import java.time.Instant
 class CohortInvitationCodeService(
   val cohortRepository: CohortRepository,
   val cohortInvitationCodeRepository: CohortInvitationCodeRepository,
+  val cohortMembershipRepository: CohortMembershipRepository,
   val cohortAccessService: CohortAccessService,
   val cohortMembershipService: CohortMembershipService,
   val identityProfileService: IdentityProfileService,
@@ -85,6 +87,10 @@ class CohortInvitationCodeService(
 
     val cohort = cohortRepository.findLockedById(invitationCode.cohort.id!!)!!
     if (cohort.state != CohortState.ACTIVE) throw ConflictException("A turma não está ativa.")
+
+    if (cohortMembershipRepository.findByCohortIdAndProfileId(cohort.id!!, profileId)?.leftAt != null) {
+      throw ForbiddenException("Você foi removido desta turma e só pode voltar por um novo convite.")
+    }
 
     val profile = identityProfileService.findProfile(profileId)?.takeIf { it.isEligible() }
       ?: throw ForbiddenException("Seu perfil não está elegível para participar de turmas.")

@@ -204,6 +204,70 @@ class CohortFlowTests(
   }
 
   @Test
+  fun `lets a removed member return only through a new invitation`() {
+    val cohortId = createActiveCohort("faculty-removal")
+
+    val code = mockMvc.post("/api/v1/cohorts/$cohortId/invitation-code") {
+      asProfile("faculty-removal", "FACULTY")
+    }.andExpect { status { isCreated() } }.extract("code")
+
+    mockMvc.post("/api/v1/cohort-invitation-codes/$code/join") {
+      asProfile("student-expelled", "STUDENT")
+    }.andExpect { status { isCreated() } }
+
+    mockMvc.delete("/api/v1/cohorts/$cohortId/members/student-expelled") {
+      asProfile("faculty-removal", "FACULTY")
+    }.andExpect { status { isNoContent() } }
+
+    mockMvc.post("/api/v1/cohort-invitation-codes/$code/join") {
+      asProfile("student-expelled", "STUDENT")
+    }.andExpect { status { isForbidden() } }
+
+    mockMvc.post("/api/v1/cohorts/$cohortId/invitations/accept") {
+      asProfile("student-expelled", "STUDENT")
+    }.andExpect { status { isNotFound() } }
+
+    mockMvc.post("/api/v1/cohorts/$cohortId/invitations") {
+      asProfile("faculty-removal", "FACULTY")
+      json("""{"profileId": "student-expelled", "role": "STUDENT"}""")
+    }.andExpect { status { isCreated() } }
+
+    mockMvc.post("/api/v1/cohorts/$cohortId/invitations/accept") {
+      asProfile("student-expelled", "STUDENT")
+    }.andExpect { status { isCreated() } }
+
+    mockMvc.get("/api/v1/cohorts/$cohortId/members") {
+      asProfile("student-expelled", "STUDENT")
+    }.andExpect { status { isOk() } }
+  }
+
+  @Test
+  fun `revokes pending invitations when a member is removed`() {
+    val cohortId = createActiveCohort("faculty-pending")
+
+    mockMvc.post("/api/v1/cohorts/$cohortId/invitations") {
+      asProfile("faculty-pending", "FACULTY")
+      json("""{"profileId": "student-pending", "role": "STUDENT"}""")
+    }.andExpect { status { isCreated() } }
+
+    val code = mockMvc.post("/api/v1/cohorts/$cohortId/invitation-code") {
+      asProfile("faculty-pending", "FACULTY")
+    }.andExpect { status { isCreated() } }.extract("code")
+
+    mockMvc.post("/api/v1/cohort-invitation-codes/$code/join") {
+      asProfile("student-pending", "STUDENT")
+    }.andExpect { status { isCreated() } }
+
+    mockMvc.delete("/api/v1/cohorts/$cohortId/members/student-pending") {
+      asProfile("faculty-pending", "FACULTY")
+    }.andExpect { status { isNoContent() } }
+
+    mockMvc.post("/api/v1/cohorts/$cohortId/invitations/accept") {
+      asProfile("student-pending", "STUDENT")
+    }.andExpect { status { isNotFound() } }
+  }
+
+  @Test
   fun `hides the cohort from students who are not current members`() {
     val cohortId = createActiveCohort("faculty-hidden")
     val slug = mockMvc.get("/api/v1/cohorts") {
