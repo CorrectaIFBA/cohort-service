@@ -4,8 +4,10 @@ import io.correcta.cohort.exceptions.BadRequestException
 import java.time.Duration
 import java.time.Instant
 
+/** Expiration helpers. */
 object ExpirationExt {
 
+  /** Returns this expiration, or now plus [maxLifetime] when null. Rejects expirations past that limit. */
   fun Instant?.withinLifetime(maxLifetime: Duration): Instant {
     val limit = Instant.now().plus(maxLifetime)
 

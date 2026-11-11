@@ -11,8 +11,10 @@ import jakarta.persistence.criteria.Subquery
 import org.springframework.data.jpa.domain.Specification
 import java.time.Instant
 
+/** JPA specifications of the cohort listing. Builders return null when the filter is absent. */
 object CohortSpecifications {
 
+  /** Cohorts owned by [profileId] or where [profileId] is a current member. */
   fun visibleTo(profileId: String): Specification<Cohort> = Specification { root, query, builder ->
     builder.or(
       builder.equal(root.get<String>("ownerProfileId"), profileId),
@@ -20,6 +22,7 @@ object CohortSpecifications {
     )
   }
 
+  /** Cohorts where [profileId] is a current member. */
   fun hasMember(profileId: String?): Specification<Cohort>? {
     if (profileId.isNullOrBlank()) return null
 
@@ -28,6 +31,7 @@ object CohortSpecifications {
     }
   }
 
+  /** Cohorts whose title or slug contains [search], case-insensitive. */
   fun matchesSearch(search: String?): Specification<Cohort>? {
     if (search.isNullOrBlank()) return null
 
@@ -52,6 +56,7 @@ object CohortSpecifications {
       )
   }
 
+  /** Cohorts owned by [ownerProfileId]. */
   fun ownedBy(ownerProfileId: String?): Specification<Cohort>? {
     if (ownerProfileId == null) return null
 
@@ -60,6 +65,7 @@ object CohortSpecifications {
     }
   }
 
+  /** Cohorts in [state]. */
   fun hasState(state: CohortState?): Specification<Cohort>? {
     if (state == null) return null
 
@@ -68,6 +74,7 @@ object CohortSpecifications {
     }
   }
 
+  /** Cohorts created at or after [instant]. */
   fun createdFrom(instant: Instant?): Specification<Cohort>? {
     if (instant == null) return null
 
@@ -76,6 +83,7 @@ object CohortSpecifications {
     }
   }
 
+  /** Cohorts created at or before [instant]. */
   fun createdUntil(instant: Instant?): Specification<Cohort>? {
     if (instant == null) return null
 

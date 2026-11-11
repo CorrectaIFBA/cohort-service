@@ -2,6 +2,7 @@ package io.correcta.cohort.mailer.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+/** Exchange and routing key of the mailer queue (`mailer.rabbitmq.*`). */
 @ConfigurationProperties("mailer.rabbitmq")
 data class MailerRabbitMQProperties(
   val exchange: String = "send-transactional-mail-exchange",

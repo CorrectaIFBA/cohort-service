@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
+/** Persistence of [CohortMembershipInvitation]. */
 @Repository
 interface CohortMembershipInvitationRepository : JpaRepository<CohortMembershipInvitation, String> {
   fun findByCohortIdAndProfileIdAndState(

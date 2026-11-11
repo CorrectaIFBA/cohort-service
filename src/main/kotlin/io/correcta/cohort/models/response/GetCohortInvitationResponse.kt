@@ -5,6 +5,7 @@ import io.correcta.cohort.entities.CohortRole
 import io.correcta.cohort.entities.MembershipInvitationState
 import io.correcta.cohort.models.response.clients.InstitutionalProfileResponse
 
+/** Invitation as seen by cohort faculty. Profile fields are null when identity-service does not return the profile. */
 data class GetCohortInvitationResponse(
   val id: String,
   val cohortId: String,

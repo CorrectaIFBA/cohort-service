@@ -1,5 +1,6 @@
 package io.correcta.cohort.security.models
 
+/** Authenticated caller built from [IdentityHeaders]. */
 data class ProfilePrincipal(
   val profileId: String,
   val personId: String?,

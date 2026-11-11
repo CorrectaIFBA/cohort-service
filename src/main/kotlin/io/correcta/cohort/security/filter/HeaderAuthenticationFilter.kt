@@ -9,6 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Builds a [ProfilePrincipal] from the identity headers set by the gateway.
+ *
+ * The headers are trusted as-is. Only the gateway may reach this service.
+ */
 class HeaderAuthenticationFilter : OncePerRequestFilter() {
 
   override fun doFilterInternal(

@@ -4,6 +4,7 @@ import io.correcta.cohort.entities.CohortMembership
 import io.correcta.cohort.entities.CohortRole
 import io.correcta.cohort.entities.CohortState
 
+/** Current membership returned to other services. */
 data class GetInternalCohortMembershipResponse(
   val cohortId: String,
   val cohortStatus: CohortState,

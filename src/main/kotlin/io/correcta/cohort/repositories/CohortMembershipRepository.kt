@@ -7,6 +7,11 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
+/**
+ * Persistence of [CohortMembership].
+ *
+ * Methods that end in `LeftAtIsNull` return current members only.
+ */
 @Repository
 interface CohortMembershipRepository : JpaRepository<CohortMembership, String> {
   fun findByCohortIdAndProfileId(cohortId: String, profileId: String): CohortMembership?

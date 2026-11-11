@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
+/** Endpoints for invitations addressed to the caller. Endpoint details are in the OpenAPI annotations. */
 @RequestMapping("/api/v1/cohort-invitations")
 @Tag(name = "My cohort invitations", description = "Invitations addressed to the authenticated profile.")
 interface MyCohortInvitationsController {

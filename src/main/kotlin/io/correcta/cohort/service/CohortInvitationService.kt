@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.Instant
 
+/** Direct cohort invitations. */
 @Service
 class CohortInvitationService(
   val cohortRepository: CohortRepository,
@@ -41,6 +42,7 @@ class CohortInvitationService(
   val transactionalMailProducer: TransactionalMailProducer,
 ) {
 
+  /** Invites an eligible profile and queues the invitation e-mail. */
   @Transactional
   fun sendInvitation(cohortId: String, request: CreateCohortInvitationRequest): GetCohortInvitationResponse {
     val faculty = cohortAccessService.requireActiveFaculty(cohortId)
@@ -82,6 +84,7 @@ class CohortInvitationService(
     return GetCohortInvitationResponse.fromInvitation(invitation, profile)
   }
 
+  /** Returns the pending invitations of the caller to active cohorts. */
   @Transactional(readOnly = true)
   fun getMyInvitations(): List<GetMyCohortInvitationResponse> {
     val profileId = scopeEvaluator.authenticatedProfile().profileId
@@ -97,6 +100,7 @@ class CohortInvitationService(
     return invitations.map { GetMyCohortInvitationResponse.fromInvitation(it, inviters[it.invitedByProfileId]) }
   }
 
+  /** Returns a page of invitations of the cohort, in any state. */
   @Transactional(readOnly = true)
   fun getInvitations(cohortId: String, pagination: PaginationRequest): PagedResponse<GetCohortInvitationResponse> {
     cohortAccessService.requireActiveFaculty(cohortId)
@@ -108,6 +112,7 @@ class CohortInvitationService(
     return page.toPagedResponse { GetCohortInvitationResponse.fromInvitation(it, profiles[it.profileId]) }
   }
 
+  /** Searches eligible profiles and tells for each one if it is a member, invited or available. */
   @Transactional(readOnly = true)
   fun searchCandidates(cohortId: String, search: String, role: CohortRole?): List<GetInvitationCandidateResponse> {
     cohortAccessService.requireActiveFaculty(cohortId)
@@ -145,6 +150,7 @@ class CohortInvitationService(
     }
   }
 
+  /** Revokes the pending invitation of [profileId]. */
   @Transactional
   fun revokeInvitation(cohortId: String, profileId: String) {
     cohortAccessService.requireActiveFaculty(cohortId)
@@ -156,6 +162,11 @@ class CohortInvitationService(
     invitation.revokedAt = Instant.now()
   }
 
+  /**
+   * Accepts the caller pending invitation.
+   *
+   * Returns the membership and `true` when it was created now. A repeated accept returns `false`.
+   */
   @Transactional
   fun acceptInvitation(cohortId: String): Pair<GetCohortMembershipResponse, Boolean> {
     val profileId = scopeEvaluator.authenticatedProfile().profileId
@@ -184,6 +195,7 @@ class CohortInvitationService(
     return GetCohortMembershipResponse.fromMembership(membership) to true
   }
 
+  /** Returns the pending invitation and marks expired ones as [MembershipInvitationState.EXPIRED]. */
   private fun findPendingInvitation(cohortId: String, profileId: String): CohortMembershipInvitation? {
     val now = Instant.now()
     val (pending, expired) = cohortMembershipInvitationRepository

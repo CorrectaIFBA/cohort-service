@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
 
+/** Direct invitation of one profile to a cohort, sent by a faculty member. */
 @Entity
 @Table(
   name = "cohort_membership_invitations",
@@ -61,6 +62,7 @@ class CohortMembershipInvitation(
   var revokedAt: Instant? = null,
 ) {
 
+  /** Returns [MembershipInvitationState.EXPIRED] for a pending invitation past [expiresAt], otherwise the stored [state]. */
   fun effectiveState(now: Instant = Instant.now()): MembershipInvitationState {
     val expired = expiresAt?.let { !it.isAfter(now) } ?: false
     return if (state == MembershipInvitationState.PENDING && expired) MembershipInvitationState.EXPIRED else state

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 
+/** Internal endpoints for other services. Do not expose them through the gateway. Endpoint details are in the OpenAPI annotations. */
 @RequestMapping("/api/v1/internal/cohorts/{cohortId}")
 @Tag(
   name = "Internal Cohort Memberships",

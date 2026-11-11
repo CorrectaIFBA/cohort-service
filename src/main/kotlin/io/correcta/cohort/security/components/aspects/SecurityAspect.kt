@@ -14,6 +14,11 @@ import org.springframework.security.authorization.AuthorizationDeniedException
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 
+/**
+ * Enforces [IsLoggedUser] and [IsProfileType] on controller methods.
+ *
+ * The annotations are looked up on the called method, the implementation and its interfaces.
+ */
 @Aspect
 @Component
 class SecurityAspect(
@@ -24,12 +29,12 @@ class SecurityAspect(
   fun authorize(joinPoint: JoinPoint) {
     val isLoggedUser = findSecurityAnnotation<IsLoggedUser>(joinPoint)
     if (isLoggedUser != null && !scopeEvaluator.isLoggedUser()) {
-      throwNotLoggedIn()
+      throw UnauthorizedException("É necessário estar autenticado para acessar este recurso.")
     }
 
     val isProfileType = findSecurityAnnotation<IsProfileType>(joinPoint)
     if (isProfileType != null && !scopeEvaluator.isProfileType(isProfileType.profileType)) {
-      throwAccessDenied()
+      throw AuthorizationDeniedException("Você não tem permissão para acessar este recurso.")
     }
   }
 
@@ -63,8 +68,4 @@ class SecurityAspect(
   private fun Class<*>.findMatchingMethod(method: Method): Method? = methods.firstOrNull {
     it.name == method.name && it.parameterTypes.contentEquals(method.parameterTypes)
   }
-
-  private fun throwAccessDenied(): Nothing = throw AuthorizationDeniedException("Você não tem permissão para acessar este recurso.")
-
-  private fun throwNotLoggedIn(): Nothing = throw UnauthorizedException("É necessário estar autenticado para acessar este recurso.")
 }

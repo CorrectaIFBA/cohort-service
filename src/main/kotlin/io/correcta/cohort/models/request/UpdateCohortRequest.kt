@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
+/** Body of the cohort update endpoint. */
 data class UpdateCohortRequest(
   @field:Schema(description = "Cohort name.", example = "Introdução à Ciência da Computação — 2026")
   @field:NotBlank(message = "O nome é obrigatório")

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 
+/** Direct cohort invitation endpoints. Endpoint details are in the OpenAPI annotations. */
 @RequestMapping("/api/v1/cohorts/{cohortId}/invitations")
 @Tag(name = "Cohort invitations", description = "Direct membership invitations targeting a specific profile.")
 interface CohortInvitationsController {

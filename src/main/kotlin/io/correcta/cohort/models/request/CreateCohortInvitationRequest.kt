@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Future
 import jakarta.validation.constraints.NotBlank
 import java.time.Instant
 
+/** Body of the direct invitation endpoint. */
 data class CreateCohortInvitationRequest(
   @field:Schema(description = "Identity-service institutional profile ID.")
   @field:NotBlank(message = "O perfil é obrigatório")

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
+/** Persistence of [Cohort]. */
 @Repository
 interface CohortRepository :
   JpaRepository<Cohort, String>,
@@ -16,6 +17,7 @@ interface CohortRepository :
 
   fun findByPublicCode(publicCode: String): Cohort?
 
+  /** Loads the cohort with a pessimistic write lock to serialize membership changes. */
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("select c from Cohort c where c.id = :id")
   fun findLockedById(id: String): Cohort?

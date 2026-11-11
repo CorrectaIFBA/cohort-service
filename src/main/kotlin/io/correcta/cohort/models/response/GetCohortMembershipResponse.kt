@@ -3,6 +3,7 @@ package io.correcta.cohort.models.response
 import io.correcta.cohort.entities.CohortMembership
 import io.correcta.cohort.entities.CohortRole
 
+/** Membership created or confirmed for the authenticated profile. */
 data class GetCohortMembershipResponse(
   val cohortId: String,
   val profileId: String,

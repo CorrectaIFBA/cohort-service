@@ -6,6 +6,11 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
 
+/**
+ * Membership of a profile in a cohort.
+ *
+ * A removed member keeps the row with [leftAt] set. A new invitation reuses the row.
+ */
 @Entity
 @Table(
   name = "cohort_memberships",

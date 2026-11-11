@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
 
+/** Converts exceptions into [ErrorResponse] or [ValidationErrorResponse] bodies with Portuguese messages. */
 @RestControllerAdvice
 class CustomExceptionHandler {
 
@@ -57,17 +58,17 @@ class CustomExceptionHandler {
   @ExceptionHandler(BadRequestException::class)
   fun handleBadRequestException(exception: BadRequestException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(400)
-    .body(ErrorResponse(exception.message ?: "A requisição não pôde ser compreendida ou não possui os parâmetros obrigatórios."))
+    .body(ErrorResponse(exception.message))
 
   @ExceptionHandler(UnauthorizedException::class)
   fun handleUnauthorizedException(exception: UnauthorizedException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(401)
-    .body(ErrorResponse(exception.message ?: "É necessário estar autenticado para acessar este recurso."))
+    .body(ErrorResponse(exception.message))
 
   @ExceptionHandler(ForbiddenException::class)
   fun handleForbiddenException(exception: ForbiddenException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(403)
-    .body(ErrorResponse(exception.message ?: "Você não tem permissão para acessar este recurso."))
+    .body(ErrorResponse(exception.message))
 
   @ExceptionHandler(AuthorizationDeniedException::class)
   fun handleAuthorizationDeniedException(): ResponseEntity<ErrorResponse> = ResponseEntity
@@ -86,7 +87,7 @@ class CustomExceptionHandler {
   @ExceptionHandler(NotFoundException::class)
   fun handleNotFoundException(exception: NotFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(404)
-    .body(ErrorResponse(exception.message ?: "O recurso solicitado não foi encontrado."))
+    .body(ErrorResponse(exception.message))
 
   @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
   fun handleMethodNotSupportedException(exception: HttpRequestMethodNotSupportedException): ResponseEntity<ErrorResponse> {
@@ -104,7 +105,7 @@ class CustomExceptionHandler {
   @ExceptionHandler(ConflictException::class)
   fun handleConflictException(exception: ConflictException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(409)
-    .body(ErrorResponse(exception.message ?: "A requisição não pôde ser concluída devido a um conflito com o estado atual do recurso."))
+    .body(ErrorResponse(exception.message))
 
   @ExceptionHandler(DataIntegrityViolationException::class)
   fun handleDataIntegrityViolationException(exception: DataIntegrityViolationException): ResponseEntity<ErrorResponse> {
@@ -123,7 +124,7 @@ class CustomExceptionHandler {
   @ExceptionHandler(ServiceUnavailableException::class)
   fun handleServiceUnavailableException(exception: ServiceUnavailableException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(503)
-    .body(ErrorResponse(exception.message ?: "Um serviço necessário está indisponível no momento. Tente novamente mais tarde."))
+    .body(ErrorResponse(exception.message))
 
   @ExceptionHandler(InternalServerErrorException::class)
   fun handleInternalServerErrorException(exception: InternalServerErrorException): ResponseEntity<ErrorResponse> {

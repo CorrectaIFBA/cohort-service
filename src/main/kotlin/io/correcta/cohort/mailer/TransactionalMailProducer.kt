@@ -19,6 +19,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+/** Queues transactional e-mails on the mailer RabbitMQ exchange. */
 @Component
 class TransactionalMailProducer(
   val rabbitTemplate: RabbitTemplate,
@@ -28,6 +29,11 @@ class TransactionalMailProducer(
 
   private val log: Logger = LoggerFactory.getLogger(TransactionalMailProducer::class.java)
 
+  /**
+   * Queues the invitation e-mail for [invitee].
+   *
+   * The message is sent only after the current transaction commits. A broker failure is logged and does not fail the request.
+   */
   fun sendCohortInvitationEmail(
     invitation: CohortMembershipInvitation,
     invitee: InstitutionalProfileResponse,

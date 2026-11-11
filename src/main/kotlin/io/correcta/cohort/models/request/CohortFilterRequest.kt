@@ -4,6 +4,7 @@ import io.correcta.cohort.entities.CohortState
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.Instant
 
+/** Query filters of the cohort listing. Every filter is optional. */
 data class CohortFilterRequest(
   @field:Schema(description = "Cohort status.")
   val status: CohortState? = null,

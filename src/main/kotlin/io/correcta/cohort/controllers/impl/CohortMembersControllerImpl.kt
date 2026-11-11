@@ -7,6 +7,7 @@ import io.correcta.cohort.models.response.PagedResponse
 import io.correcta.cohort.service.CohortMembershipService
 import org.springframework.web.bind.annotation.RestController
 
+/** Delegates [CohortMembersController] calls to the service layer. */
 @RestController
 class CohortMembersControllerImpl(
   val cohortMembershipService: CohortMembershipService,

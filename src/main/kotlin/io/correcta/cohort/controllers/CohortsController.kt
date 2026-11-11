@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 
+/** Cohort endpoints. Endpoint details are in the OpenAPI annotations. */
 @RequestMapping("/api/v1/cohorts")
 @Tag(name = "Cohorts", description = "Cohort creation, discovery and lifecycle.")
 interface CohortsController {

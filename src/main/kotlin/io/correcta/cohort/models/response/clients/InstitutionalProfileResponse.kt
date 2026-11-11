@@ -1,5 +1,6 @@
 package io.correcta.cohort.models.response.clients
 
+/** Institutional profile returned by identity-service. */
 data class InstitutionalProfileResponse(
   val profileId: String,
   val type: String,
@@ -11,6 +12,7 @@ data class InstitutionalProfileResponse(
   val login: String?,
 ) {
 
+  /** Tells if the profile is active, has an active credential and is a cohort profile type. */
   fun isEligible(): Boolean = state == "ACTIVE" && profileActive && credentialActive && type in COHORT_PROFILE_TYPES
 
   companion object {

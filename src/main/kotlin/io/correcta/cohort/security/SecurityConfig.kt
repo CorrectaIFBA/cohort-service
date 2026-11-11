@@ -9,6 +9,11 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+/**
+ * Stateless security chain.
+ *
+ * Authorization happens in [io.correcta.cohort.security.components.aspects.SecurityAspect], so every request passes the chain.
+ */
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {

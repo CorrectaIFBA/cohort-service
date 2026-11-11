@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
 
+/** Reusable code that lets eligible profiles join an active cohort. A cohort has at most one active code. */
 @Entity
 @Table(
   name = "cohort_invitation_codes",
@@ -56,6 +57,7 @@ class CohortInvitationCode(
   var revokedAt: Instant? = null,
 ) {
 
+  /** Returns [CohortInvitationCodeState.EXPIRED] for an active code past [expiresAt], otherwise the stored [state]. */
   fun effectiveState(now: Instant = Instant.now()): CohortInvitationCodeState {
     val expired = !expiresAt.isAfter(now)
     return if (state == CohortInvitationCodeState.ACTIVE && expired) CohortInvitationCodeState.EXPIRED else state

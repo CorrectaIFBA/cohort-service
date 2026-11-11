@@ -7,6 +7,7 @@ import io.correcta.cohort.models.response.GetInvitationCodeResponse
 import io.correcta.cohort.service.CohortInvitationCodeService
 import org.springframework.web.bind.annotation.RestController
 
+/** Delegates [CohortInvitationCodesController] calls to the service layer. */
 @RestController
 class CohortInvitationCodesControllerImpl(
   val cohortInvitationCodeService: CohortInvitationCodeService,

@@ -3,6 +3,7 @@ package io.correcta.cohort.models.response
 import io.correcta.cohort.entities.CohortInvitationCode
 import io.correcta.cohort.entities.CohortInvitationCodeState
 
+/** Invitation code with its effective state. */
 data class GetInvitationCodeResponse(
   val id: String,
   val code: String,

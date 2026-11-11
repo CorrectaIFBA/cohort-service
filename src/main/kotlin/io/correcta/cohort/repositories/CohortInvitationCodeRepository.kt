@@ -5,6 +5,7 @@ import io.correcta.cohort.entities.CohortInvitationCodeState
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
+/** Persistence of [CohortInvitationCode]. */
 @Repository
 interface CohortInvitationCodeRepository : JpaRepository<CohortInvitationCode, String> {
   fun findByCohortIdAndState(cohortId: String, state: CohortInvitationCodeState): List<CohortInvitationCode>

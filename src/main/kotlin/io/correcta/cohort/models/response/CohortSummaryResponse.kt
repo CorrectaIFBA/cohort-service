@@ -4,6 +4,7 @@ import io.correcta.cohort.entities.Cohort
 import io.correcta.cohort.entities.CohortState
 import io.swagger.v3.oas.annotations.media.Schema
 
+/** Short cohort view embedded in other responses. */
 data class CohortSummaryResponse(
   val id: String,
   val name: String,

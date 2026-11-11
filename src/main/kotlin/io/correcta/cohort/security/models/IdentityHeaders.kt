@@ -1,5 +1,6 @@
 package io.correcta.cohort.security.models
 
+/** Headers the gateway sets from identity-service `GET /account/me`. */
 object IdentityHeaders {
   const val PROFILE_ID = "X-User-Id"
   const val PERSON_ID = "X-User-Person-Id"

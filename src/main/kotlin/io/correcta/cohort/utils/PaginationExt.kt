@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 
+/** Conversions between pagination models and Spring Data. */
 object PaginationExt {
 
+  /** Builds a [PageRequest]. Rejects sort fields outside [allowedSortFields]. */
   fun PaginationRequest.toPageRequest(allowedSortFields: Set<String>, defaultSortField: String): PageRequest {
     val field = sortBy ?: defaultSortField
 
@@ -21,6 +23,7 @@ object PaginationExt {
     return PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDirection), field))
   }
 
+  /** Maps the page content with [mapper]. The page must be sorted by one field. */
   fun <E, T> Page<E>.toPagedResponse(mapper: (E) -> T): PagedResponse<T> {
     val order = sort.first()
 

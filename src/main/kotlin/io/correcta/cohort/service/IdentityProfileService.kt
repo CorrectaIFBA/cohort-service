@@ -9,6 +9,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
+/**
+ * Profile lookups on identity-service.
+ *
+ * Failures other than `404` throw [ServiceUnavailableException], so callers fail closed.
+ */
 @Service
 class IdentityProfileService(
   val identityClient: IdentityClient,
@@ -16,6 +21,7 @@ class IdentityProfileService(
 
   private val log: Logger = LoggerFactory.getLogger(IdentityProfileService::class.java)
 
+  /** Returns the profile, or null when identity-service answers `404`. */
   fun findProfile(profileId: String): InstitutionalProfileResponse? = try {
     identityClient.getProfile(profileId)
   } catch (exception: FeignException.NotFound) {
@@ -24,6 +30,7 @@ class IdentityProfileService(
     throw unavailable(exception)
   }
 
+  /** Returns the found profiles by profile ID. Missing IDs are absent from the map. */
   fun findProfiles(profileIds: Collection<String>): Map<String, InstitutionalProfileResponse> {
     if (profileIds.isEmpty()) return emptyMap()
 
@@ -36,6 +43,7 @@ class IdentityProfileService(
     }
   }
 
+  /** Searches up to [size] profiles, optionally of one [type]. */
   fun searchProfiles(search: String, type: String?, size: Int): List<InstitutionalProfileResponse> = try {
     identityClient.searchProfiles(search, type, size)
   } catch (exception: FeignException) {

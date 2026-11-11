@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 
+/** Cohort invitation code endpoints. Endpoint details are in the OpenAPI annotations. */
 @RequestMapping("/api/v1")
 @Tag(name = "Cohort invitation codes", description = "Reusable codes that let eligible profiles join an active cohort.")
 interface CohortInvitationCodesController {

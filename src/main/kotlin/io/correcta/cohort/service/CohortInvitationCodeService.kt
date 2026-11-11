@@ -21,6 +21,7 @@ import java.security.SecureRandom
 import java.time.Duration
 import java.time.Instant
 
+/** Generation, revocation and use of cohort invitation codes. */
 @Service
 class CohortInvitationCodeService(
   val cohortRepository: CohortRepository,
@@ -34,6 +35,7 @@ class CohortInvitationCodeService(
 
   private val secureRandom = SecureRandom()
 
+  /** Creates a new code and revokes the previous active code of the cohort. */
   @Transactional
   fun generateInvitationCode(cohortId: String, request: CreateInvitationCodeRequest): GetInvitationCodeResponse {
     val faculty = cohortAccessService.requireActiveFaculty(cohortId)
@@ -62,12 +64,14 @@ class CohortInvitationCodeService(
     return GetInvitationCodeResponse.fromInvitationCode(invitationCode)
   }
 
+  /** Returns the active code of the cohort. */
   @Transactional(readOnly = true)
   fun getInvitationCode(cohortId: String): GetInvitationCodeResponse {
     cohortAccessService.requireActiveFaculty(cohortId)
     return GetInvitationCodeResponse.fromInvitationCode(findValidCode(cohortId))
   }
 
+  /** Revokes the active code of the cohort. */
   @Transactional
   fun revokeInvitationCode(cohortId: String) {
     cohortAccessService.requireActiveFaculty(cohortId)
@@ -77,6 +81,11 @@ class CohortInvitationCodeService(
     invitationCode.revokedAt = Instant.now()
   }
 
+  /**
+   * Adds the caller to the cohort of [code], with the role of the caller profile type.
+   *
+   * [code] is case-insensitive and may contain separators. Removed members can return only through a direct invitation.
+   */
   @Transactional
   fun joinCohort(code: String): GetCohortMembershipResponse {
     val profileId = scopeEvaluator.authenticatedProfile().profileId

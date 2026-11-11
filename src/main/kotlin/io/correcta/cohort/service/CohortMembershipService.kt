@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
+/** Cohort membership listing, lookup and removal. */
 @Service
 class CohortMembershipService(
   val cohortRepository: CohortRepository,
@@ -29,6 +30,7 @@ class CohortMembershipService(
   val identityProfileService: IdentityProfileService,
 ) {
 
+  /** Returns a page of current members. */
   @Transactional(readOnly = true)
   fun getMembers(cohortId: String, pagination: PaginationRequest): PagedResponse<GetCohortMemberResponse> {
     cohortAccessService.requireReadableActiveCohort(cohortId)
@@ -38,6 +40,7 @@ class CohortMembershipService(
       .toEnrichedResponse()
   }
 
+  /** Returns a page of current faculty members. */
   @Transactional(readOnly = true)
   fun getFaculty(cohortId: String, pagination: PaginationRequest): PagedResponse<GetCohortMemberResponse> {
     cohortAccessService.requireReadableActiveCohort(cohortId)
@@ -51,6 +54,7 @@ class CohortMembershipService(
       .toEnrichedResponse()
   }
 
+  /** Returns the current membership of [profileId] for internal callers. No access check. */
   @Transactional(readOnly = true)
   fun getCurrentMembership(cohortId: String, profileId: String): GetInternalCohortMembershipResponse {
     val membership = cohortMembershipRepository.findByCohortIdAndProfileIdAndLeftAtIsNull(cohortId, profileId)
@@ -59,6 +63,7 @@ class CohortMembershipService(
     return GetInternalCohortMembershipResponse.fromMembership(membership)
   }
 
+  /** Removes a member and revokes its pending invitations. The owner cannot be removed. */
   @Transactional
   fun removeMember(cohortId: String, profileId: String) {
     cohortAccessService.requireActiveFaculty(cohortId)
@@ -83,6 +88,7 @@ class CohortMembershipService(
       }
   }
 
+  /** Creates the membership, or reactivates the membership of a removed member. */
   fun addMember(cohort: Cohort, profileId: String, role: CohortRole): CohortMembership {
     val membership = cohortMembershipRepository.findByCohortIdAndProfileId(cohort.id!!, profileId)
       ?: return cohortMembershipRepository.saveAndFlush(CohortMembership(cohort = cohort, profileId = profileId, role = role))

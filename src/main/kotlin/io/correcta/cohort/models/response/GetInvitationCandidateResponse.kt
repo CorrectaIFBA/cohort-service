@@ -3,6 +3,7 @@ package io.correcta.cohort.models.response
 import io.correcta.cohort.models.response.clients.InstitutionalProfileResponse
 import io.swagger.v3.oas.annotations.media.Schema
 
+/** Profile found by the invitation candidate search. */
 data class GetInvitationCandidateResponse(
   @field:Schema(description = "Institutional profile ID.")
   val profileId: String,
@@ -34,6 +35,7 @@ data class GetInvitationCandidateResponse(
   }
 }
 
+/** Relation between a candidate profile and the cohort. */
 enum class InvitationCandidateStatus {
   AVAILABLE,
   MEMBER,

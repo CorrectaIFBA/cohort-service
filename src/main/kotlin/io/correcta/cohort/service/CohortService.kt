@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.security.SecureRandom
 import java.time.Instant
 
+/** Cohort creation, listing and lifecycle. */
 @Service
 class CohortService(
   val cohortRepository: CohortRepository,
@@ -37,6 +38,7 @@ class CohortService(
 
   private val secureRandom = SecureRandom()
 
+  /** Returns a page of cohorts. Staff see every cohort, other profiles see visible cohorts only. */
   @Transactional(readOnly = true)
   fun getCohorts(filter: CohortFilterRequest, pagination: PaginationRequest): PagedResponse<GetCohortResponse> {
     val profileId = scopeEvaluator.authenticatedProfile().profileId
@@ -62,6 +64,7 @@ class CohortService(
       .toPagedResponse(GetCohortResponse::fromCohort)
   }
 
+  /** Returns a visible cohort by ID. [slug] must be the current slug. */
   @Transactional(readOnly = true)
   fun getCohort(cohortId: String, slug: String): GetCohortResponse {
     val cohort = cohortAccessService.findVisibleCohort(cohortId)
@@ -70,9 +73,11 @@ class CohortService(
     return GetCohortResponse.fromCohort(cohort)
   }
 
+  /** Returns a visible cohort by public code. */
   @Transactional(readOnly = true)
   fun getCohortByPublicCode(publicCode: String): GetCohortResponse = GetCohortResponse.fromCohort(cohortAccessService.findVisibleCohortByPublicCode(publicCode))
 
+  /** Creates a DRAFT cohort and adds the caller as its owner and faculty member. */
   @Transactional
   fun createCohort(request: CreateCohortRequest): GetCohortResponse {
     val profileId = scopeEvaluator.authenticatedProfile().profileId
@@ -101,6 +106,7 @@ class CohortService(
     return GetCohortResponse.fromCohort(cohort)
   }
 
+  /** Updates name, slug and description. Archived cohorts are read-only. */
   @Transactional
   fun updateCohort(cohortId: String, request: UpdateCohortRequest): GetCohortResponse {
     val cohort = cohortAccessService.findOwnedCohort(cohortId)
@@ -118,6 +124,7 @@ class CohortService(
     return GetCohortResponse.fromCohort(cohortRepository.saveAndFlush(cohort))
   }
 
+  /** Moves the cohort to a new state allowed by [CohortState.canTransitionTo]. */
   @Transactional
   fun changeCohortStatus(cohortId: String, request: ChangeCohortStatusRequest): GetCohortResponse {
     val cohort = cohortAccessService.findOwnedCohort(cohortId)
@@ -132,6 +139,7 @@ class CohortService(
     return GetCohortResponse.fromCohort(cohortRepository.saveAndFlush(cohort))
   }
 
+  /** Deletes a DRAFT cohort and its memberships. */
   @Transactional
   fun deleteCohort(cohortId: String) {
     val cohort = cohortAccessService.findOwnedCohort(cohortId)

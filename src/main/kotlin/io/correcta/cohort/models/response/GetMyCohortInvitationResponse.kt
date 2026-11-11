@@ -5,6 +5,7 @@ import io.correcta.cohort.entities.CohortRole
 import io.correcta.cohort.models.response.clients.InstitutionalProfileResponse
 import io.swagger.v3.oas.annotations.media.Schema
 
+/** Pending invitation addressed to the authenticated profile. */
 data class GetMyCohortInvitationResponse(
   @field:Schema(description = "Invitation ID.")
   val id: String,

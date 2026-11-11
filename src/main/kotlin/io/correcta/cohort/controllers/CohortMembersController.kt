@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 
+/** Cohort member endpoints. Endpoint details are in the OpenAPI annotations. */
 @RequestMapping("/api/v1/cohorts/{cohortId}")
 @Tag(name = "Cohort members", description = "Current cohort members and membership removal.")
 interface CohortMembersController {
